@@ -402,21 +402,24 @@ static bool ProcessList_readStatFile(Process *process, const char* dirname, cons
    command[commsize] = '\0';
    location = end + 2;
 
-   int num = sscanf(location, 
+   /* if you change this make sure num == n below matches exp. # of fields */
+   int num = sscanf(location,
       "%c %d %u %u %u "
       "%d %lu "
       "%*u %*u %*u %*u "
       "%llu %llu %llu %llu "
       "%ld %ld %ld "
-      "%*d %*u %*u %*d %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u "
+      "%*d %llu "
+      "%*u %*d %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u "
       "%d %d",
       &process->state, &process->ppid, &process->pgrp, &process->session, &process->tty_nr, 
       &process->tpgid, &process->flags,
       &process->utime, &process->stime, &process->cutime, &process->cstime, 
       &process->priority, &process->nice, &process->nlwp,
+      &process->starttime,
       &process->exit_signal, &process->processor);
    fclose(file);
-   return (num == 16);
+   return (num == 17);
 }
 
 static bool ProcessList_statProcessDir(Process* process, const char* dirname, char* name) {

@@ -111,6 +111,7 @@ typedef struct Process_ {
    long int priority;
    long int nice;
    long int nlwp;
+   unsigned long long int starttime;
    char starttime_show[8];
    time_t starttime_ctime;
    #ifdef DEBUG
@@ -486,7 +487,13 @@ static void Process_writeField(Process* this, RichString* str, ProcessField fiel
       }
       break;
    }
-   case STARTTIME: snprintf(buffer, n, "%s", this->starttime_show); break;
+   case STARTTIME: {
+     struct tm date;
+     time_t starttimewall = btime + (this->starttime / sysconf(_SC_CLK_TCK));
+     (void) localtime_r(&starttimewall, &date);
+     strftime(buffer, n, ((starttimewall > time(NULL) - 86400) ? "%R " : "%b%d "), &date);
+     break;
+   }
    #ifdef HAVE_OPENVZ
    case CTID: snprintf(buffer, n, "%5u ", this->ctid); break;
    case VPID: snprintf(buffer, n, "%5u ", this->vpid); break;
@@ -700,10 +707,10 @@ int Process_compare(const void* v1, const void* v2) {
    case NLWP:
       return (p1->nlwp - p2->nlwp);
    case STARTTIME: {
-      if (p1->starttime_ctime == p2->starttime_ctime)
+      if (p1->starttime == p2->starttime)
          return (p1->pid - p2->pid);
       else
-         return (p1->starttime_ctime - p2->starttime_ctime);
+         return (p1->starttime - p2->starttime);
    }
    #ifdef HAVE_OPENVZ
    case CTID:
