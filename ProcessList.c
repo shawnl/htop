@@ -428,17 +428,10 @@ static bool ProcessList_statProcessDir(Process* process, const char* dirname, ch
 
    snprintf(filename, MAX_NAME, "%s/%s", dirname, name);
    struct stat sstat;
-   int statok = stat(filename, &sstat);
-   if (statok == -1)
+   if (stat(filename, &sstat) < 0)
       return false;
    process->st_uid = sstat.st_uid;
-  
-   struct tm date;
-   time_t ctime = sstat.st_ctime;
-   process->starttime_ctime = ctime;
-   (void) localtime_r((time_t*) &ctime, &date);
-   strftime(process->starttime_show, 7, ((ctime > time(NULL) - 86400) ? "%R " : "%b%d "), &date);
-   
+
    return true;
 }
 
