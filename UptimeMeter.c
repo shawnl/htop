@@ -11,6 +11,7 @@ in the source distribution for its full text.
 #include "CRT.h"
 
 #include <math.h>
+#include <sys/sysinfo.h>
 
 /*{
 #include "Meter.h"
@@ -21,13 +22,10 @@ int UptimeMeter_attributes[] = {
 };
 
 static void UptimeMeter_setValues(Meter* this, char* buffer, int len) {
-   double uptime = 0;
-   FILE* fd = fopen(PROCDIR "/uptime", "r");
-   if (fd) {
-      fscanf(fd, "%64lf", &uptime);
-      fclose(fd);
-   }
-   int totalseconds = (int) ceil(uptime);
+   struct sysinfo si;
+   if (sysinfo(&si) < 0)
+       assert(false);
+   long totalseconds = si.uptime;
    int seconds = totalseconds % 60;
    int minutes = (totalseconds/60) % 60;
    int hours = (totalseconds/3600) % 24;
