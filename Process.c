@@ -177,6 +177,8 @@ char* PROCESS_CLASS = "Process";
 #define PROCESS_CLASS NULL
 #endif
 
+extern long long int btime;  /* boot time, gets set in htop.c:record_btime() */
+
 const char *Process_fieldNames[] = {
    "", "PID", "Command", "STATE", "PPID", "PGRP", "SESSION",
    "TTY_NR", "TPGID", "FLAGS", "MINFLT", "CMINFLT", "MAJFLT", "CMAJFLT",

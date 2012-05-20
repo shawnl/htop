@@ -41,6 +41,8 @@ in the source distribution for its full text.
 
 #define COPYRIGHT "(C) 2004-2011 Hisham Muhammad"
 
+long long int btime; /* boot time, gets set in record_btime() */
+
 static void printVersionFlag() {
    fputs("htop " VERSION " - " COPYRIGHT "\n"
          "Released under the GNU GPL.\n\n",
@@ -262,6 +264,22 @@ static void IncBuffer_reset(IncBuffer* inc) {
    inc->buffer[0] = 0;
 }
 
+static void record_btime() {
+  FILE* file = fopen(PROCSTATFILE, "r");
+  assert(file != NULL);
+  do {
+    char buffer[4096];
+    if (fgets(buffer, 4096, file) == NULL) {
+      fprintf(stderr, "Error: no btime in %s\n", file);
+      exit(1);
+    } else if (strncmp(buffer, "btime ", 6) == 0) {
+      sscanf(buffer, "btime %lld\n", &btime);
+      break;
+    }
+  } while(true);
+  return;
+}
+
 int main(int argc, char** argv) {
 
    int delay = -1;
@@ -350,6 +368,8 @@ int main(int argc, char** argv) {
    bool doRefresh = true;
    bool doRecalculate = false;
    Settings* settings;
+
+   record_btime();
    
    Panel* killPanel = NULL;
    
