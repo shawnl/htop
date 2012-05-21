@@ -380,6 +380,12 @@ void ProcessList_sort(ProcessList* this) {
 static bool ProcessList_readStatFile(Process *process, const char* dirname, const char* name, char* command) {
    char filename[MAX_NAME+1];
    snprintf(filename, MAX_NAME, "%s/%s/stat", dirname, name);
+
+   struct stat sstat;
+   if (stat(filename, &sstat) < 0)
+      return false;
+   process->st_uid = sstat.st_uid;
+
    FILE* file = fopen(filename, "r");
    if (!file)
       return false;
@@ -420,19 +426,6 @@ static bool ProcessList_readStatFile(Process *process, const char* dirname, cons
       &process->exit_signal, &process->processor);
    fclose(file);
    return (num == 17);
-}
-
-static bool ProcessList_statProcessDir(Process* process, const char* dirname, char* name) {
-   char filename[MAX_NAME+1];
-   filename[MAX_NAME] = '\0';
-
-   snprintf(filename, MAX_NAME, "%s/%s", dirname, name);
-   struct stat sstat;
-   if (stat(filename, &sstat) < 0)
-      return false;
-   process->st_uid = sstat.st_uid;
-
-   return true;
 }
 
 #ifdef HAVE_TASKSTATS
@@ -679,9 +672,6 @@ static bool ProcessList_processEntries(ProcessList* this, const char* dirname, P
       process->percent_mem = (process->m_resident * PAGE_SIZE_KB) / (double)(this->totalMem) * 100.0;
 
       if(!existingProcess) {
-
-         if (! ProcessList_statProcessDir(process, dirname, name))
-            goto errorReadingProcess;
 
          process->user = UsersTable_getRef(this->usersTable, process->st_uid);
 
