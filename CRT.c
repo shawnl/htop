@@ -310,7 +310,7 @@ void CRT_setColors(int colorScheme) {
       CRT_colors[PROCESS_TREE] = ColorPair(Green,White);
       CRT_colors[PROCESS_R_STATE] = ColorPair(Green,White);
       CRT_colors[PROCESS_HIGH_PRIORITY] = ColorPair(Red,White);
-      CRT_colors[PROCESS_LOW_PRIORITY] = ColorPair(Red,White);
+      CRT_colors[PROCESS_LOW_PRIORITY] = ColorPair(Green,White);
       CRT_colors[PROCESS_THREAD] = ColorPair(Blue,White);
       CRT_colors[PROCESS_THREAD_BASENAME] = A_BOLD | ColorPair(Blue,White);
       CRT_colors[BAR_BORDER] = ColorPair(Blue,White);
@@ -371,7 +371,7 @@ void CRT_setColors(int colorScheme) {
       CRT_colors[PROCESS_TREE] = ColorPair(Blue,Black);
       CRT_colors[PROCESS_R_STATE] = ColorPair(Green,Black);
       CRT_colors[PROCESS_HIGH_PRIORITY] = ColorPair(Red,Black);
-      CRT_colors[PROCESS_LOW_PRIORITY] = ColorPair(Red,Black);
+      CRT_colors[PROCESS_LOW_PRIORITY] = ColorPair(Green,Black);
       CRT_colors[PROCESS_THREAD] = ColorPair(Blue,Black);
       CRT_colors[PROCESS_THREAD_BASENAME] = A_BOLD | ColorPair(Blue,Black);
       CRT_colors[BAR_BORDER] = ColorPair(Blue,Black);
@@ -432,7 +432,7 @@ void CRT_setColors(int colorScheme) {
       CRT_colors[PROCESS_TREE] = ColorPair(Cyan,Blue);
       CRT_colors[PROCESS_R_STATE] = ColorPair(Green,Blue);
       CRT_colors[PROCESS_HIGH_PRIORITY] = ColorPair(Red,Blue);
-      CRT_colors[PROCESS_LOW_PRIORITY] = ColorPair(Red,Blue);
+      CRT_colors[PROCESS_LOW_PRIORITY] = ColorPair(Green,Blue);
       CRT_colors[PROCESS_THREAD] = ColorPair(Green,Blue);
       CRT_colors[PROCESS_THREAD_BASENAME] = A_BOLD | ColorPair(Green,Blue);
       CRT_colors[BAR_BORDER] = A_BOLD | ColorPair(Yellow,Blue);
@@ -495,7 +495,7 @@ void CRT_setColors(int colorScheme) {
       CRT_colors[PROCESS_THREAD_BASENAME] = A_BOLD | ColorPair(Blue,Black);
       CRT_colors[PROCESS_R_STATE] = ColorPair(Green,Black);
       CRT_colors[PROCESS_HIGH_PRIORITY] = ColorPair(Red,Black);
-      CRT_colors[PROCESS_LOW_PRIORITY] = ColorPair(Red,Black);
+      CRT_colors[PROCESS_LOW_PRIORITY] = ColorPair(Green,Black);
       CRT_colors[BAR_BORDER] = A_BOLD | ColorPair(Green,Black);
       CRT_colors[BAR_SHADOW] = ColorPair(Cyan,Black);
       CRT_colors[SWAP] = ColorPair(Red,Black);
