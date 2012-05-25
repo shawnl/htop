@@ -7,6 +7,7 @@ in the source distribution for its full text.
 
 #include "Process.h"
 
+#include "config.h"
 #include "ProcessList.h"
 #include "CRT.h"
 #include "String.h"
@@ -39,6 +40,7 @@ in the source distribution for its full text.
 #define PAGE_SIZE_KB ( PAGE_SIZE / ONE_K )
 
 /*{
+#include "config.h"
 #include "Object.h"
 #include "Affinity.h"
 #include <sys/types.h>
