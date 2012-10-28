@@ -25,6 +25,7 @@ in the source distribution for its full text.
 #include <string.h>
 #include <time.h>
 #include <assert.h>
+#include <errno.h>
 
 /*{
 #include "Vector.h"
@@ -192,7 +193,10 @@ ProcessList* ProcessList_new(UsersTable* usersTable) {
    this->processes2 = Vector_new(PROCESS_CLASS, true, DEFAULT_SIZE, Process_compare);
    
    FILE* file = fopen(PROCSTATFILE, "r");
-   assert(file != NULL);
+   if (!file) {
+      printf("fopen(\"%s\", \"r\") failed (is %s mounted?): %s\n", PROCSTATFILE, PROCDIR, strerror(errno));
+      exit(EXIT_FAILURE);
+   }
    char buffer[256];
    int cpus = -1;
    do {
@@ -740,7 +744,10 @@ void ProcessList_scan(ProcessList* this) {
    unsigned long long int swapFree = 0;
 
    FILE* file = fopen(PROCMEMINFOFILE, "r");
-   assert(file != NULL);
+   if (!file) {
+      printf("fopen(%s, \"r\") failed (is %s mounted?): %s\n", PROCMEMINFOFILE, PROCDIR, strerror(errno));
+      exit(EXIT_FAILURE);
+   }
    int cpus = this->cpuCount;
    {
       char buffer[128];
@@ -778,7 +785,10 @@ void ProcessList_scan(ProcessList* this) {
    fclose(file);
 
    file = fopen(PROCSTATFILE, "r");
-   assert(file != NULL);
+   if (!file) {
+      printf("fopen(%s, \"r\") failed (is %s mounted?): %s\n", PROCSTATFILE, PROCDIR, strerror(errno));
+      exit(EXIT_FAILURE);
+   }
    for (int i = 0; i <= cpus; i++) {
       char buffer[256];
       int cpuid;
