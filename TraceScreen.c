@@ -21,6 +21,7 @@ in the source distribution for its full text.
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <errno.h>
 
 /*{
 #include "Process.h"
@@ -72,17 +73,22 @@ void TraceScreen_run(TraceScreen* this) {
    int err = pipe(fdpair);
    if (err == -1) return;
    int child = fork();
-   if (child == -1) return;
    if (child == 0) {
-      dup2(fdpair[1], STDERR_FILENO);
-      fcntl(fdpair[1], F_SETFL, O_NONBLOCK);
+      close(fdpair[0]);
+      if (fdpair[1] != STDERR_FILENO) {
+         dup2(fdpair[1], STDERR_FILENO);
+         close(fdpair[1]);
+      }
       sprintf(buffer, "%d", this->process->pid);
       execlp("strace", "strace", "-p", buffer, NULL);
-      const char* message = "Could not execute 'strace'. Please make sure it is available in your $PATH.";
-      write(fdpair[1], message, strlen(message));
-      exit(1);
-   }
-   fcntl(fdpair[0], F_SETFL, O_NONBLOCK);
+
+      fprintf(fdpair[1], "Could not execute '%s'. "
+"Please make sure it is available in your $PATH: %s",
+"strace", strerror(errno));
+      _exit(EXIT_FAILURE);
+   } else if (child == -1) return;
+
+   close(fdpair[1]);
    FILE* strace = fdopen(fdpair[0], "r");
    Panel* panel = this->display;
    int fd_strace = fileno(strace);
